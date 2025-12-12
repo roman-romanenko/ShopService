@@ -5,8 +5,16 @@ import org.example.product.Product;
 import java.util.List;
 
 public interface OrderRepo {
-    public void add(List<Product> products);
-    public Order getById(int id);
-    public void remove(int id);
-    public List<Order> getAll();
+    void add(List<Product> products);
+    void addList(List<Order> orders);
+
+    Order getById(int id);
+    List<Order> getAll();
+
+
+    void remove(int id);
+    void removeAll();
+
+    Order retrieveById(int id);
+    public List<Order> retrieveAll();
 }
