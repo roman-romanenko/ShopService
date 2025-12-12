@@ -6,14 +6,12 @@ import org.example.product.Product;
 import java.util.*;
 
 public class OrderMapRepo implements OrderRepo{
-    private static int orderId = 1;
 
     private final Map<Integer, Order> orders = new HashMap<>();
 
     @Override
-    public void add(List<Product> products) {
-        orders.put(orderId, new Order(orderId, products));
-        orderId++;
+    public void add(Order order) {
+        orders.put(order.orderId(), order);
     }
 
     @Override

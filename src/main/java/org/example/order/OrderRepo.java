@@ -5,7 +5,7 @@ import org.example.product.Product;
 import java.util.List;
 
 public interface OrderRepo {
-    void add(List<Product> products);
+    void add(Order order);
     void addList(List<Order> orders);
 
     Order getById(int id);

@@ -7,12 +7,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class OrderListRepo implements OrderRepo {
-    private static int orderId = 1;
-
     private final List<Order> orderList = new ArrayList<>();
 
-    public void add(List<Product> products) {
-        Order order = new Order(orderId++, products);
+    public void add(Order order) {
         orderList.add(order);
     }
 
@@ -23,7 +20,11 @@ public class OrderListRepo implements OrderRepo {
     }
 
     public void remove(int id) {
-        orderList.remove(id);
+        for (Order order : orderList) {
+            if(order.orderId() == id) {
+                orderList.remove(order);
+            }
+        }
     }
 
     public void removeAll() {
@@ -40,12 +41,12 @@ public class OrderListRepo implements OrderRepo {
     }
 
     public List<Order> getAll() {
-        return orderList;
+        return new ArrayList<>(orderList);
     }
 
     public Order retrieveById(int id) {
         Order order = getById(id);
-        orderList.remove(order);
+        remove(id);
 
         return order;
     }
