@@ -6,31 +6,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class OrderListRepo {
+public class OrderListRepo implements OrderRepo {
     private static int orderId = 1;
 
     private final List<Order> orderList = new ArrayList<>();
 
-    public void addOrder(List<Product> products) {
+    public void add(List<Product> products) {
         Order order = new Order(orderId++, products);
         orderList.add(order);
     }
 
-    public void addOrders(List<Order> orders) {
+    public void addList(List<Order> orders) {
         for (Order order : orders) {
             orderList.add(order);
         }
     }
 
-    public void removeOrder(int id) {
+    public void remove(int id) {
         orderList.remove(id);
     }
 
-    public void removeAllOrders() {
+    public void removeAll() {
         orderList.clear();
     }
 
-    public Order getOrderById(int id) {
+    public Order getById(int id) {
         for (Order order : orderList) {
             if(order.orderId() == id)
                 return order;
@@ -39,18 +39,18 @@ public class OrderListRepo {
         return null;
     }
 
-    public List<Order> getOrders() {
+    public List<Order> getAll() {
         return orderList;
     }
 
-    public Order retrieveOrderById(int id) {
-        Order order = getOrderById(id);
+    public Order retrieveById(int id) {
+        Order order = getById(id);
         orderList.remove(order);
 
         return order;
     }
 
-    public List<Order> retrieveAllOrders() {
+    public List<Order> retrieveAll() {
         List<Order> orders = new ArrayList<>(orderList);
         orderList.clear();
 
