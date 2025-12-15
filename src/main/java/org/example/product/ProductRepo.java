@@ -1,20 +1,34 @@
 package org.example.product;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class ProductRepo {
-    private final List<Product> productsList = new ArrayList<>();
+    private final Map<Product, Integer> products = new HashMap<>();
 
     public void addProduct(Product product) {
-        productsList.add(product);
+        if (products.containsKey(product)) {
+            System.out.println("Product already exists");
+            return;
+        }
+
+        products.put(product, 0);
+    }
+
+    public void addProduct(Product product, int quantity) {
+        int availableQuantity = products.containsKey(product) ? getQuantity(product) : 0;
+
+        products.put(product, availableQuantity + quantity);
+    }
+
+    public int getQuantity(Product product) {
+        return product == null ? 0 : products.get(product);
     }
 
     public Product findProductById(String productId) {
-        for (Product product : productsList) {
-            if(product.id().equals(productId)) {
-                return product;
+        for (Map.Entry<Product, Integer> entry : products.entrySet()) {
+            Product product = entry.getKey();
+            if (product.id().equals(productId)) {
+                return entry.getKey();
             }
         }
 
@@ -24,27 +38,51 @@ public class ProductRepo {
     public void removeProduct(String productId) {
         Product product = findProductById(productId);
         if(product != null) {
-            productsList.remove(product);
+            products.remove(product);
         }
     }
 
-    public void removeAllProducts() {
-        productsList.clear();
+    public void removeProduct(Product product) {
+        products.remove(product);
     }
 
-    public Product retrieveProductById(String productId) {
-        Product product = findProductById(productId);
+    public void removeAllProducts() {
+        products.clear();
+    }
 
-        if (product != null) {
-            removeProduct(productId);
+    public Product retrieveProductById(String productId, int quantity) {
+        Product product = findProductById(productId);
+        int availableQuantity = products.containsKey(product) ? getQuantity(product) : 0;
+
+        if(availableQuantity == 0) {
+            System.out.println("There are no products");
+            return null;
+        }
+
+        if (availableQuantity >= quantity) {
+            products.put(product, availableQuantity - quantity);
+        } else {
+            System.out.println("There is no" + product.name() + " with the given quantity, rest is: " + availableQuantity);
         }
 
         return product;
     }
 
-    public List<Product> retrieveAllProducts() {
-        List<Product> retrievedProductsList = new ArrayList<>(productsList);
-        productsList.clear();
+//    public Product retrieveProductById(Product product, int quantity) {
+//
+//        Product product = findProductById(productId);
+//
+//
+//        if (product != null) {
+//            removeProduct(productId);
+//        }
+//
+//        return product;
+//    }
+
+    public Map<Product, Integer> retrieveAllProducts() {
+        Map<Product, Integer> retrievedProductsList = new HashMap<>(products);
+        products.clear();
 
         return retrievedProductsList;
     }
@@ -53,18 +91,18 @@ public class ProductRepo {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         ProductRepo that = (ProductRepo) o;
-        return Objects.equals(productsList, that.productsList);
+        return Objects.equals(products, that.products);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(productsList);
+        return Objects.hashCode(products);
     }
 
     @Override
     public String toString() {
         return "ProductRepo{" +
-                "productsList=" + productsList +
+                "productsList=" + products +
                 '}';
     }
 }

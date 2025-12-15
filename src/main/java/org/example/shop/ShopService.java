@@ -5,9 +5,7 @@ import org.example.order.OrderRepo;
 import org.example.product.Product;
 import org.example.product.ProductRepo;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 public class ShopService {
@@ -21,20 +19,28 @@ public class ShopService {
         this.orders = orders;
     }
 
-    public void addProductToOrder(Order order, String productId) {
-        Product product = products.retrieveProductById(productId);
+    public void addProductToOrder(Order order, String productId, int quantity) {
+        Product product = products.retrieveProductById(productId, quantity);
 
         if (product == null) {
             System.out.println("Product not found: " + productId);
             return;
         }
+        System.out.println(order.products().get(product));
 
-        order.products().add(product);
+        if(order.products().containsKey(product)) {
+            int availableQuantity = order.products().get(product);
+
+            if(order.products().containsKey(product) && availableQuantity > 0) {
+                order.products().put(product, availableQuantity + quantity);
+            }
+        } else {
+            order.products().put(product, quantity);
+        }
     }
 
     public Order makeOrder() {
-        List<Product> orderProducts = new ArrayList<>();
-        Order order = new Order(orderId, orderProducts);
+        Order order = new Order(orderId, new HashMap<>());
 
         orders.add(order);
         orderId++;
