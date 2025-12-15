@@ -26,7 +26,6 @@ public class ShopService {
             System.out.println("Product not found: " + productId);
             return;
         }
-        System.out.println(order.products().get(product));
 
         if(order.products().containsKey(product)) {
             int availableQuantity = order.products().get(product);
